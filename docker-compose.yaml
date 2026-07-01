@@ -1,0 +1,99 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: mcp_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: meta_mcp
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d meta_mcp"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    container_name: mcp_redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  nats:
+    image: nats:alpine
+    container_name: mcp_nats
+    command: "--jetstream -m 8222"
+    ports:
+      - "4222:4222"
+      - "8222:8222"
+    healthcheck:
+      test: ["CMD", "nc", "-z", "localhost", "4222"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  mock-meta:
+    build:
+      context: ./mock-meta
+      dockerfile: Dockerfile
+    container_name: mcp_mock_meta
+    ports:
+      - "8081:8081"
+    environment:
+      - PORT=8081
+      - APP_WEBHOOK_URL=http://app:8080/webhook
+    depends_on:
+      - postgres
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q --spider http://localhost:8081/health || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: mcp_app
+    stdin_open: true
+    tty: true
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=postgres
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=password
+      - DB_NAME=meta_mcp
+      - DB_SSLMODE=disable
+      - REDIS_ADDR=redis:6379
+      - NATS_URL=nats://nats:4222
+      - META_API_URL=http://mock-meta:8081
+      - META_PHONE_NUMBER_ID=mock-phone-id
+      - META_WABA_ID=mock-waba-id
+      - META_ACCESS_TOKEN=mock-access-token
+      - META_WEBHOOK_VERIFY_TOKEN=mock-verify-token
+      - SERVER_HTTP_PORT=8080
+      - POLICIES_PATH=/app/policies.yaml
+    volumes:
+      - ./policies.yaml:/app/policies.yaml
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      nats:
+        condition: service_healthy
+      mock-meta:
+        condition: service_healthy
+
+volumes:
+  pgdata:

@@ -1,0 +1,136 @@
+# ============================================
+# Confidential / Internal Documents
+# ============================================
+
+# PRD (Product Requirements Document) — contains business strategy, pricing, roadmap
+PRD_MetaBusinessMCP.md
+PRD_ChangeLog.md
+PRD_Deliverables.md
+
+# Walkthrough files — internal development documentation
+walkthrough-*.md
+
+# Internal prompts (AI agent prompts for development)
+prompts/
+
+# Internal reports and logs
+laporan-*.md
+*.internal.md
+
+# Test results (not for distribution)
+tests/results/
+
+# ============================================
+# Secrets & Configuration
+# ============================================
+
+# Environment files
+.env
+.env.local
+.env.*.local
+.env.production
+.env.staging
+.env.development
+
+# Config with credentials
+config.yaml
+config.yml
+config.local.yaml
+config.local.yml
+
+# Private keys
+*.key
+*.pem
+*.p12
+*.pfx
+
+# ============================================
+# Build Artifacts
+# ============================================
+
+/bin/
+/vendor/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+go.work
+go.work.sum
+
+# Coverage reports
+coverage
+coverage.*
+*.coverprofile
+
+# ============================================
+# Node.js / Next.js (Dashboard)
+# ============================================
+
+dashboard/node_modules/
+dashboard/.next/
+dashboard/out/
+dashboard/.env
+dashboard/.env.local
+dashboard/.env.*.local
+dashboard/tsconfig.tsbuildinfo
+dashboard/npm-debug.log*
+dashboard/yarn-debug.log*
+dashboard/yarn-error.log*
+dashboard/.pnpm-debug.log*
+
+# ============================================
+# Build Artifacts
+# ============================================
+
+cmd/server/dashboard_out/*
+!cmd/server/dashboard_out/.gitkeep
+*.tar.gz
+
+# ============================================
+# IDE / Editor
+# ============================================
+
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ============================================
+# OS
+# ============================================
+
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini
+
+# ============================================
+# Docker
+# ============================================
+
+docker-compose.override.yml
+
+# ============================================
+# Supabase
+# ============================================
+
+supabase/.temp/
+
+# ============================================
+# Logs & Temp
+# ============================================
+
+*.log
+logs/
+tmp/
+temp/
+.cache/

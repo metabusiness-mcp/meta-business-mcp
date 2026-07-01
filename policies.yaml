@@ -1,0 +1,28 @@
+policies:
+  - id: "no_marketing_after_8pm"
+    name: "No Marketing Messages after 8 PM"
+    type: "time_restriction"
+    channel: "whatsapp"
+    message_type: "marketing"
+    is_enabled: true
+    rules:
+      deny_after: "20:00"
+      timezone: "Asia/Jakarta"
+
+  - id: "max_marketing_per_day"
+    name: "Maximum 2 Marketing Messages per Day"
+    type: "frequency_limit"
+    channel: "whatsapp"
+    message_type: "marketing"
+    is_enabled: true
+    rules:
+      max_per_day: 2
+
+  - id: "skip_vip_customers"
+    name: "Skip Marketing for VIP Customers"
+    type: "segment_exclusion"
+    channel: "whatsapp"
+    message_type: "marketing"
+    is_enabled: true
+    rules:
+      exclude_tag: "vip"
